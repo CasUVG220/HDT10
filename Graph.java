@@ -1,10 +1,9 @@
 public class Graph {
-    private static final int INF = Integer.MAX_VALUE; // Valor infinito
+    public static final int INF = Integer.MAX_VALUE / 2; // Valor seguro para evitar overflow
     private int[][] adjMatrix;
     private int size;
     private String[] cities;
 
-    // Constructor
     public Graph(int size, String[] cities) {
         this.size = size;
         this.cities = cities;
@@ -17,26 +16,22 @@ public class Graph {
         }
     }
 
-    // Agregar arista con peso
     public void addEdge(int from, int to, int weight) {
         if (from >= 0 && from < size && to >= 0 && to < size) {
             adjMatrix[from][to] = weight;
         }
     }
 
-    // Eliminar arista
     public void removeEdge(int from, int to) {
         if (from >= 0 && from < size && to >= 0 && to < size) {
             adjMatrix[from][to] = INF;
         }
     }
 
-    // Obtener la matriz de adyacencia
     public int[][] getAdjMatrix() {
         return adjMatrix;
     }
 
-    // Imprimir matriz de adyacencia
     public void printAdjMatrix() {
         System.out.println("\nMatriz de adyacencia:");
         for (int i = 0; i < size; i++) {
@@ -47,12 +42,10 @@ public class Graph {
         }
     }
 
-    // Obtener ciudad 
     public String getCity(int index) {
         return (index >= 0 && index < cities.length) ? cities[index] : "Inválido";
     }
 
-    // Obtener índice 
     public int getCityIndex(String name) {
         for (int i = 0; i < cities.length; i++) {
             if (cities[i].equalsIgnoreCase(name)) return i;
@@ -60,23 +53,20 @@ public class Graph {
         return -1;
     }
 
-    // Algoritmo de Floyd
     public int[][] floydWarshall() {
         int[][] dist = new int[size][size];
 
-        // Copiar la matriz original
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 dist[i][j] = adjMatrix[i][j];
             }
         }
 
-        // Algoritmo
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     if (dist[i][k] != INF && dist[k][j] != INF
-                            && dist[i][k] + dist[k][j] < dist[i][j]) {
+                        && dist[i][j] > dist[i][k] + dist[k][j]) {
                         dist[i][j] = dist[i][k] + dist[k][j];
                     }
                 }
@@ -86,7 +76,6 @@ public class Graph {
         return dist;
     }
 
-    // Centro del grafo
     public int getGraphCenter(int[][] distMatrix) {
         int minEccentricity = INF;
         int centerIndex = -1;
